@@ -60,17 +60,24 @@ router.delete('/deleteAll', async(req, res) => {
 router.delete('/:id', async(req,res) => {
     try {
         const { id } = req.params
-        const result = await TrainingBlock.findByIdAndDelete(id)
 
-        if (!result) {
-            return res.status(404).send('training block not found')
+        const block = await TrainingBlock.findById(id)
+        if (!block) {
+            return res.status(404).send('block not found')
         }
+
+        const weekIds = block.trainingWeeks.map(week => week._id)
+
+        await Promise.all(weekIds.map(weekId => Workouts.deleteMany({trainingWeekId : weekId})))
+
+        await TrainingBlock.findByIdAndDelete(id)
+
         return res.status(200).send('deletion succesful')
     } catch (error) {
         console.log(error) 
         return res.status(500).send({message: error.message})
     }
-})
+}) 
 
 
 export default router

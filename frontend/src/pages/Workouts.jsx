@@ -7,12 +7,14 @@ import WorkoutDropDown from '../workout-components/WorkoutDropDown';
 import AddSet from '../workout-components/AddSet';
 import DeleteButton from '../components/DeleteButton';
 import WorkoutMetrics from '../workout-components/WorkoutMetrics';
+import SetDropDownButton from '../workout-components/SetDropDownButton';
 
 //page to display a given week of workouts
 export default function Workouts() {
     const [workouts, setWorkouts] = useState('') 
 
     const [bool, setBool] = useState(false) //used to trigger use state
+    const [toggleSets, setToggleSets] = useState({})
     const [showInputCard, setShowInputCard] = useState(false) 
 
     const [exerciseId, setExerciseId] = useState('') //exercise id prop changes when AddSet button is clicked
@@ -82,6 +84,12 @@ export default function Workouts() {
         setShowInputCard(true)
     }
 
+    //passed into SetDropDownButton as a prop, receives toggle state from the component
+    const toggleStateComms = (toggleState, exerciseId) => {
+        const temp = {...toggleSets, [exerciseId] : toggleState}
+        setToggleSets(temp)
+    }
+
 
   return (
     <div className='bg-gray-900 text-white min-h-screen'> {/* Main background */}
@@ -106,8 +114,11 @@ export default function Workouts() {
 
                         {workout.exercises?.map((exercise, index) => (
                             <div key={index} className='bg-gray-700 p-3 rounded-md mb-3'> {/* Exercise Subcard */}
-                                <h3 className='text-lg font-semibold'>{exercise.exerciseName}</h3>
-                                {exercise.sets?.map((set, index) => (
+                                <div className='flex items-center'>
+                                    <h3 className='text-lg font-semibold'>{exercise.exerciseName}</h3>
+                                    <SetDropDownButton toggleStateComms={toggleStateComms} exerciseId={exercise._id}/>
+                                </div>
+                                {toggleSets[exercise._id] && exercise.sets?.map((set, index) => (
                                     <div key={index} className='flex justify-between items-center py-2 border-b border-gray-600'>
                                         <span>{set.weight}lbs x {set.reps}</span>
                                         <span>RIR: {set.rir} </span>
@@ -119,7 +130,7 @@ export default function Workouts() {
 
                                 <div className="flex justify-evenly">
                                     <button 
-                                        className='bg-red-400 mt-3 px-4 py-2 rounded text-white shadow hover:bg-red-500 transition' 
+                                        className='bg-red-400 mt-3 px-2 py-2 rounded text-white shadow hover:bg-red-500 transition' 
                                         onClick={() => handleToggleDisplay(exercise._id, workout._id)}
                                     >
                                         Add Set

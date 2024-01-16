@@ -1,5 +1,5 @@
 import express from 'express'
-import { TrainingBlock } from '../models/models.js'
+import { TrainingBlock, Workouts } from '../models/models.js'
 
 const router = express.Router()
 
@@ -73,9 +73,9 @@ router.delete('/:blockId/:weekId', async(req,res) => {
         }
 
         week.deleteOne()
-        await block.save()
 
-        await Workout.deleteMany({ trainingWeekId: weekId });
+        await Workouts.deleteMany({ trainingWeekId: weekId });
+        await block.save()
 
         return res.status(200).send({message: 'Week and associated workouts deleted'});
     }
