@@ -1,5 +1,5 @@
 import express from 'express'
-import { MacroCycle, TrainingBlock } from '../models/models.js'
+import { MacroCycle, TrainingBlock, Workouts } from '../models/models.js'
 
 const router = express.Router()
 
@@ -41,6 +41,20 @@ router.delete('/:id', async(req,res) => {
     try {
         const { id } = req.params
         const result = await MacroCycle.findByIdAndDelete(id)
+
+        const blocks = await TrainingBlock.find({macroCycleId: id})
+
+        if (blocks.length > 0) {
+            const promiseArray = blocks.flatMap(block => (
+                block.trainingWeeks?.map(week => (
+                    Workouts.deleteMany({trainingWeekId: week._id})
+                ))
+            ))
+    
+            await Promise.all(promiseArray)
+        }
+
+
         await TrainingBlock.deleteMany({ macroCycleId: id })
         if (!result) {
             return res.status(404).send('Macro Not Found')

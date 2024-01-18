@@ -1,5 +1,5 @@
 import express from 'express'
-import { TrainingBlock } from '../models/models.js'
+import { TrainingBlock, Workouts } from '../models/models.js'
 
 const router = express.Router()
 
@@ -65,7 +65,6 @@ router.delete('/:id', async(req,res) => {
         if (!block) {
             return res.status(404).send('block not found')
         }
-
         const weekIds = block.trainingWeeks.map(week => week._id)
 
         await Promise.all(weekIds.map(weekId => Workouts.deleteMany({trainingWeekId : weekId})))
