@@ -19,7 +19,6 @@ export default function Workouts() {
 
     const [exerciseId, setExerciseId] = useState('') //exercise id prop changes when AddSet button is clicked
     const [workoutId, setWorkoutId] = useState('') //workout id prop changes when AddSet button is clicked
-    const [workoutVolumes, setWorkoutVolumes] = useState({}) //used to track volume per body part for each workout
 
     const {id, weekId} = useParams()
     const location = useLocation()
@@ -31,20 +30,6 @@ export default function Workouts() {
             .get(`http://localhost:5000/workouts/${weekId}`)
             .then((res) => {
                 setWorkouts(res.data)
-
-                const tempVolumeData = {} // {workout id : {body part : volume } }
-                const tempWorkoutData = res.data
-
-                tempWorkoutData.map((workout, index) => {
-                    const bodyPartVolume = {}
-                    workout.exercises.map((exercise, index) => {
-                        bodyPartVolume[exercise.bodyPart] = (bodyPartVolume[exercise.bodyPart] || 0) + exercise.sets.length
-                    })
-                    tempVolumeData[workout._id] = bodyPartVolume
-                })
-
-                setWorkoutVolumes(tempVolumeData)
-
             })
             .catch((error) => {
                 console.log(error)
@@ -144,10 +129,10 @@ export default function Workouts() {
                                     />}
                                     <DeleteExerciseButton route={`exercises/${workout._id}`} id={exercise._id} onSuccess={handleDelete}/> 
                                 </div>
-                            </div>
+                            </div> 
                         ))}
                             
-                        <WorkoutMetrics workoutId={workout._id} workoutVolumes={workoutVolumes}/>
+                        <WorkoutMetrics weekId={weekId} workoutId={workout._id} toggler={bool} />
 
                     </div>
                 ))}
@@ -158,56 +143,3 @@ export default function Workouts() {
   )
 }
 
-
-
-
-    // <div className=''>
-    //     <div className="flex justify-center items-center">
-    //         <h1 className='text-center text-3xl my-4 mr-4'>Week {weekNumber} Workouts</h1>
-    //         <BsPlus className='text-3xl cursor-pointer border rounded' onClick={handleAddWorkout}></BsPlus>
-    //         <div className="fixed top-0 right-0 p-4">
-    //             <BackButton destination={`/${id}/Blocks`}/>
-    //         </div>
-    //     </div>
-
-    //     <div className="flex justify-evenly my-4">
-    //         {workouts && workouts.map((workout, index) => (
-    //             <div key={index}>
-    //                 <div className='flex items-center'>
-    //                     <p className='mr-4'>Workout {workout.workoutNumber}</p>
-    //                     <WorkoutDropDown id={workout._id} route='workouts' onSuccess={handleDelete}/>
-    //                 </div>
-
-    //                 {workout.exercises?.map((exercise, index) => (
-    //                     <div key={index} className='my-4'>
-    //                         <p >{exercise.exerciseName}</p>
-    //                         {exercise.sets?.map((set, index) => (
-    //                             <div key={index} className=''>
-    //                                 <div className="flex items-center">
-    //                                     <ul className='ml-4 mr-2'>{set.weight}lbs x {set.reps} RIR:{set.rir}</ul>
-    //                                     <div className='opacity-0 hover:opacity-100'>
-    //                                         <DeleteButton 
-    //                                             id={set._id} 
-    //                                             route={`sets/${workout._id}/${exercise._id}`} 
-    //                                             onSuccess={handleDelete}
-    //                                         /> {/*Deletes an exercise*/}
-    //                                     </div>
-    //                                 </div>
-    //                             </div>
-    //                         ))}
-    //                         <div className="flex items-center">
-    //                             <button className='bg-red-400 mr-4' onClick={() => handleToggleDisplay(exercise._id, workout._id)}>Add Set</button>
-    //                             {showInputCard &&
-    //                                 <AddSet onClose={() => setShowInputCard(false)} 
-    //                                 exerciseId={exerciseId} 
-    //                                 workoutId={workoutId}
-    //                                 refresh={() => setBool(prev => !prev)}
-    //                             />}
-    //                             <DeleteButton route={`exercises/${workout._id}`} id={exercise._id} onSuccess={handleDelete}/> {/* delete's an exercise */}
-    //                         </div>
-    //                     </div>
-    //                 ))}
-    //             </div>
-    //         ))}
-    //     </div>
-    // </div>

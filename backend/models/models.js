@@ -1,4 +1,5 @@
 import mongoose, { mongo } from "mongoose";
+import calcVolumeByBodyPart from "../functions/calcVolumeByBodyPart.js"
 
 //Macro cycle model
 const MacroCycleSchema = mongoose.Schema(
@@ -80,9 +81,19 @@ const WorkoutSchema = mongoose.Schema(
             required: true,
             max: [7, 'The value of path `{PATH}` ({VALUE}) exceeds the limit (7).']
         },
-        exercises: [ExerciseSchema]
+        exercises: [ExerciseSchema],
+        volumeByBodyPart: {
+            type: Map,
+            of: Number
+        }
     }
 )
+
+//apply volume by body part calculation to the Workout Schema
+WorkoutSchema.methods.calcVolumeByBodyPart = function() {
+    calcVolumeByBodyPart(this);
+};
+
 
 const Workouts = mongoose.model('Workouts', WorkoutSchema)
 

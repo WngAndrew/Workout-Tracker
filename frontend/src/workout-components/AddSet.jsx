@@ -25,8 +25,8 @@ export default function AddSet({ onClose, exerciseId, workoutId, refresh }) {
             }) 
             .catch((error) => {
                 console.log(error)
-            })
-            
+            }) 
+
     }
 
   return (
@@ -76,47 +76,4 @@ export default function AddSet({ onClose, exerciseId, workoutId, refresh }) {
 
 
 
-        // <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full" id="my-modal">
-        //     <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-        //         <div className="mt-3 text-center">
-        //             <button 
-        //                 onClick={onClose} 
-        //                 className="absolute top-0 right-0 mt-2 mr-2 text-gray-600 hover:text-gray-900 transition-colors duration-150"
-        //             >
-        //                 <FaTimes className="h-6 w-6" />
-        //             </button>
-        //             <h3 className="text-lg leading-6 font-medium text-gray-900">Enter Set Data</h3>
-        //             <form onSubmit={handleAddSet}>
-        //                 <div className="mt-2 px-7 py-3">
-        //                     <input 
-        //                         className="text-sm text-gray-500 text-center" 
-        //                         placeholder="Weight"
-        //                         value={weightValue}
-        //                         onChange={(e) => setWeightValue(e.target.value)}
-        //                     />
-        //                 </div>
-        //                 <div className="mt-2 px-7 py-3">
-        //                     <input 
-        //                         className="text-sm text-gray-500 text-center" 
-        //                         placeholder="Reps"
-        //                         value={repValue}
-        //                         onChange={(e) => setRepValue(e.target.value)}
-        //                     />
-        //                 </div>
-        //                 <div className="mt-2 px-7 py-3">
-        //                     <input 
-        //                         className="text-sm text-gray-500 text-center" 
-        //                         placeholder="RIR"
-        //                         value={RIRValue}
-        //                         onChange={(e) => setRIRValue(e.target.value)}
-        //                     />
-        //                 </div>
-        //                 <div className="items-center px-4 py-3">
-        //                     <button type="submit" className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-300">
-        //                         Submit Set Data
-        //                     </button>
-        //                 </div>
-        //             </form>
-        //         </div>
-        //     </div>
-        // </div>
+       

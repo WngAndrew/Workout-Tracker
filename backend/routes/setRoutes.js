@@ -31,8 +31,10 @@ router.post('/:workoutId/:exerciseId', async(req, res) => {
         const { workoutId, exerciseId } = req.params
         const { weight, reps, rir} = req.body
 
-        if (!weight || !reps || !rir) {
-            return res.status(500).send('enter weight, rir, and reps')
+        if (!weight || !reps) {
+            if (rir != 0 && !rir) {
+                return res.status(500).send('enter weight, rir, and reps')
+            }
         }
 
         const set = {

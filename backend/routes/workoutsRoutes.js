@@ -1,5 +1,6 @@
 import express from 'express'
 import { TrainingBlock, Workouts } from '../models/models.js'
+import calcVolumeByBodyPart from '../functions/calcVolumeByBodyPart.js'
 
 const router = express.Router()
 
@@ -12,13 +13,34 @@ router.get('/:weekId', async (req,res) => {
 
         if (!workouts) {
             res.status(200).send('wkts not found')
-        }
+        }   
+
+        //invoking logic to store volume by bp in workout model
+        const savePromises = workouts.map(async (workout) => {
+            workout.calcVolumeByBodyPart(workout);
+            await workout.save(); // Save each document if necessary
+        });
+
+        await Promise.all(savePromises);
 
         res.status(200).send(workouts)
     } catch (error) {
         console.log(error)
         res.status(500).send({message:error.message})
     }
+})
+
+//get a specific workouts metrics
+router.get('/metrics/:workoutId', async(req, res) => {
+    const { workoutId } = req.params
+
+    const workout = await Workouts.findById(workoutId)
+
+    if (!workout) {
+        return res.status(404).send('wkt not found')
+    }
+
+    res.send(workout.volumeByBodyPart)
 })
 
 //add a workout to a week
