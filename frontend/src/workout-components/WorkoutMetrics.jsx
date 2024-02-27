@@ -5,15 +5,21 @@ export default function WorkoutMetrics({ weekId, workoutId, toggler }) {
     const [volumeObject, setVolumeObject] = useState({});
 
     useEffect(() => {
-        axios
-            .get(`http://localhost:5000/workouts/metrics/${workoutId}`)
-            .then((res) => {
-                setVolumeObject(res.data)
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }, [toggler]); // Add weekId as a dependency to refetch data when it changes
+        const fetchData = () => {
+            axios
+                .get(`http://localhost:5000/workouts/metrics/${workoutId}`)
+                .then((res) => {
+                    setVolumeObject(res.data)
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        };
+
+        const delayInMilliseconds = 100; 
+        setTimeout(fetchData, delayInMilliseconds);
+        
+    }, [toggler, weekId]); 
 
     return (
         <div>
